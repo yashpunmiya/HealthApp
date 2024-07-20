@@ -83,7 +83,9 @@
 
             </div>
           </div>
-          <button type="submit" class="btnSubmit">Login</button>
+          <form method="post" action="logout/">
+            {% csrf_token %}
+            <button type="submit">logout</button>
           <div class="text-center">Do not have account? <a href="patientsignup">Signup here</a></div>
         </div>
       </div>
