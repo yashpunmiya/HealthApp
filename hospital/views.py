@@ -13,7 +13,7 @@ from django.db.models import Q
 def home_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
-    return render(request,'hospital/index.html')
+    return render(request,'index.html')
 
 
 #for showing signup/login button for admin(by sumit)
