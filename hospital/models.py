@@ -58,7 +58,7 @@ class Appointment(models.Model):
 
 
 
-class PatientDischargeDetails(models.Model):
+class PatientDischargeDetail(models.Model):
     patientId=models.PositiveIntegerField(null=True)
     patientName=models.CharField(max_length=40)
     assignedDoctorName=models.CharField(max_length=40)
