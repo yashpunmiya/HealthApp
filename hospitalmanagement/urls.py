@@ -36,7 +36,7 @@ urlpatterns = [
     
     path('adminlogin', LoginView.as_view(template_name='hospital/adminlogin.html')),
     path('doctorlogin', LoginView.as_view(template_name='hospital/doctorlogin.html')),
-    path('patientlogin', LoginView.as_view(template_name='hospital/patientlogin.html')),
+    path('patientlogin', LoginView.as_view(template_name='patient_login.html')),
 
 
     path('afterlogin', views.afterlogin_view,name='afterlogin'),
