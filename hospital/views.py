@@ -428,8 +428,8 @@ def discharge_patient_view(request,pk):
             'total':(int(request.POST['roomCharge'])*int(d))+int(request.POST['doctorFee'])+int(request.POST['medicineCost'])+int(request.POST['OtherCharge'])
         }
         patientDict.update(feeDict)
-        #for updating to database patientDischargeDetails (pDD)
-        pDD=models.PatientDischargeDetails()
+        #for updating to database PatientDischargeDetail (pDD)
+        pDD=models.PatientDischargeDetail()
         pDD.patientId=pk
         pDD.patientName=patient.get_name
         pDD.assignedDoctorName=assignedDoctor[0].first_name
@@ -470,7 +470,7 @@ def render_to_pdf(template_src, context_dict):
 
 
 def download_pdf_view(request,pk):
-    dischargeDetails=models.PatientDischargeDetails.objects.all().filter(patientId=pk).order_by('-id')[:1]
+    dischargeDetails=models.PatientDischargeDetail.objects.all().filter(patientId=pk).order_by('-id')[:1]
     dict={
         'patientName':dischargeDetails[0].patientName,
         'assignedDoctorName':dischargeDetails[0].assignedDoctorName,
@@ -569,7 +569,7 @@ def doctor_dashboard_view(request):
     #for three cards
     patientcount=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id).count()
     appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
-    patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
+    patientdischarged=models.PatientDischargeDetail.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
 
     #for  table in doctor dashboard
     appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).order_by('-id')
@@ -623,7 +623,7 @@ def search_view(request):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_view_discharge_patient_view(request):
-    dischargedpatients=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name)
+    dischargedpatients=models.PatientDischargeDetail.objects.all().distinct().filter(assignedDoctorName=request.user.first_name)
     doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
     return render(request,'hospital/doctor_view_discharge_patient.html',{'dischargedpatients':dischargedpatients,'doctor':doctor})
 
@@ -777,7 +777,7 @@ def patient_view_appointment_view(request):
 @user_passes_test(is_patient)
 def patient_discharge_view(request):
     patient=models.Patient.objects.get(user_id=request.user.id) #for profile picture of patient in sidebar
-    dischargeDetails=models.PatientDischargeDetails.objects.all().filter(patientId=patient.id).order_by('-id')[:1]
+    dischargeDetails=models.PatientDischargeDetail.objects.all().filter(patientId=patient.id).order_by('-id')[:1]
     patientDict=None
     if dischargeDetails:
         patientDict ={
