@@ -58,7 +58,7 @@ def admin_signup_view(request):
             user = authenticate(request,username=username,password=password)
             login(request,user)
             return redirect('afterlogin')
-    return render(request,'hospital/adminsignup.html',{'form':form})
+    return render(request,'admin_login.html',{'form':form})
 
 
 
