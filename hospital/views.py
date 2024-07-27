@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,reverse
+from django.contrib.auth import authenticate, login
 from . import forms,models
 from django.db.models import Sum
 from django.contrib.auth.models import Group
@@ -42,15 +43,22 @@ def patientclick_view(request):
 def admin_signup_view(request):
     form=forms.AdminSigupForm()
     if request.method=='POST':
-        form=forms.AdminSigupForm(request.POST)
-        if form.is_valid():
-            user=form.save()
-            user.set_password(user.password)
-            user.save()
-            my_admin_group = Group.objects.get_or_create(name='ADMIN')
-            my_admin_group[0].user_set.add(user)
-            return HttpResponseRedirect('adminlogin')
-    return render(request,'hospital/adminsignup.html',{'form':form})
+        if 'signup' in request.POST:
+            form=forms.AdminSigupForm(request.POST)
+            if form.is_valid():
+                user=form.save()
+                user.set_password(user.password)
+                user.save()
+                my_admin_group = Group.objects.get_or_create(name='ADMIN')
+                my_admin_group[0].user_set.add(user)
+                return HttpResponseRedirect('adminlogin')
+        elif 'login' in request.POST:
+            username= request.POST.get("username")
+            password= request.POST.get("password")
+            user = authenticate(request,username=username,password=password)
+            login(request,user)
+            return redirect('afterlogin')
+    return render(request,'admin_login.html',{'form':form})
 
 
 
@@ -60,19 +68,26 @@ def doctor_signup_view(request):
     doctorForm=forms.DoctorForm()
     mydict={'userForm':userForm,'doctorForm':doctorForm}
     if request.method=='POST':
-        userForm=forms.DoctorUserForm(request.POST)
-        doctorForm=forms.DoctorForm(request.POST,request.FILES)
-        if userForm.is_valid() and doctorForm.is_valid():
-            user=userForm.save()
-            user.set_password(user.password)
-            user.save()
-            doctor=doctorForm.save(commit=False)
-            doctor.user=user
-            doctor=doctor.save()
-            my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
-            my_doctor_group[0].user_set.add(user)
-        return HttpResponseRedirect('doctorlogin')
-    return render(request,'hospital/doctorsignup.html',context=mydict)
+        if 'signup' in request.POST:
+            userForm=forms.DoctorUserForm(request.POST)
+            doctorForm=forms.DoctorForm(request.POST,request.FILES)
+            if userForm.is_valid() and doctorForm.is_valid():
+                user=userForm.save()
+                user.set_password(user.password)
+                user.save()
+                doctor=doctorForm.save(commit=False)
+                doctor.user=user
+                doctor=doctor.save()
+                my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
+                my_doctor_group[0].user_set.add(user)
+            return HttpResponseRedirect('doctorlogin')
+        elif 'login' in request.POST:
+            username= request.POST.get("username")
+            password= request.POST.get("password")
+            user = authenticate(request,username=username,password=password)
+            login(request,user)
+            return redirect('afterlogin')
+    return render(request,'doctor_login.html',context=mydict)
 
 
 def patient_signup_view(request):
@@ -80,20 +95,27 @@ def patient_signup_view(request):
     patientForm=forms.PatientForm()
     mydict={'userForm':userForm,'patientForm':patientForm}
     if request.method=='POST':
-        userForm=forms.PatientUserForm(request.POST)
-        patientForm=forms.PatientForm(request.POST,request.FILES)
-        if userForm.is_valid() and patientForm.is_valid():
-            user=userForm.save()
-            user.set_password(user.password)
-            user.save()
-            patient=patientForm.save(commit=False)
-            patient.user=user
-            patient.assignedDoctorId=request.POST.get('assignedDoctorId')
-            patient=patient.save()
-            my_patient_group = Group.objects.get_or_create(name='PATIENT')
-            my_patient_group[0].user_set.add(user)
-        return HttpResponseRedirect('patientlogin')
-    return render(request,'hospital/patientsignup.html',context=mydict)
+        if 'signup' in request.POST:
+            userForm=forms.PatientUserForm(request.POST)
+            patientForm=forms.PatientForm(request.POST,request.FILES)
+            if userForm.is_valid() and patientForm.is_valid():
+                user=userForm.save()
+                user.set_password(user.password)
+                user.save()
+                patient=patientForm.save(commit=False)
+                patient.user=user
+                patient.assignedDoctorId=request.POST.get('assignedDoctorId')
+                patient=patient.save()
+                my_patient_group = Group.objects.get_or_create(name='PATIENT')
+                my_patient_group[0].user_set.add(user)
+            return HttpResponseRedirect('patientlogin')
+        elif 'login' in request.POST:
+            username= request.POST.get("username")
+            password= request.POST.get("password")
+            user = authenticate(request,username=username,password=password)
+            login(request,user)
+            return redirect('afterlogin')
+    return render(request,'patient_login.html',context=mydict)
 
 
 
@@ -428,8 +450,8 @@ def discharge_patient_view(request,pk):
             'total':(int(request.POST['roomCharge'])*int(d))+int(request.POST['doctorFee'])+int(request.POST['medicineCost'])+int(request.POST['OtherCharge'])
         }
         patientDict.update(feeDict)
-        #for updating to database patientDischargeDetails (pDD)
-        pDD=models.PatientDischargeDetails()
+        #for updating to database PatientDischargeDetail (pDD)
+        pDD=models.PatientDischargeDetail()
         pDD.patientId=pk
         pDD.patientName=patient.get_name
         pDD.assignedDoctorName=assignedDoctor[0].first_name
@@ -470,7 +492,7 @@ def render_to_pdf(template_src, context_dict):
 
 
 def download_pdf_view(request,pk):
-    dischargeDetails=models.PatientDischargeDetails.objects.all().filter(patientId=pk).order_by('-id')[:1]
+    dischargeDetails=models.PatientDischargeDetail.objects.all().filter(patientId=pk).order_by('-id')[:1]
     dict={
         'patientName':dischargeDetails[0].patientName,
         'assignedDoctorName':dischargeDetails[0].assignedDoctorName,
@@ -569,7 +591,7 @@ def doctor_dashboard_view(request):
     #for three cards
     patientcount=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id).count()
     appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
-    patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
+    patientdischarged=models.PatientDischargeDetail.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
 
     #for  table in doctor dashboard
     appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).order_by('-id')
@@ -623,7 +645,7 @@ def search_view(request):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_view_discharge_patient_view(request):
-    dischargedpatients=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name)
+    dischargedpatients=models.PatientDischargeDetail.objects.all().distinct().filter(assignedDoctorName=request.user.first_name)
     doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
     return render(request,'hospital/doctor_view_discharge_patient.html',{'dischargedpatients':dischargedpatients,'doctor':doctor})
 
@@ -777,7 +799,7 @@ def patient_view_appointment_view(request):
 @user_passes_test(is_patient)
 def patient_discharge_view(request):
     patient=models.Patient.objects.get(user_id=request.user.id) #for profile picture of patient in sidebar
-    dischargeDetails=models.PatientDischargeDetails.objects.all().filter(patientId=patient.id).order_by('-id')[:1]
+    dischargeDetails=models.PatientDischargeDetail.objects.all().filter(patientId=patient.id).order_by('-id')[:1]
     patientDict=None
     if dischargeDetails:
         patientDict ={

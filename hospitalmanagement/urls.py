@@ -30,17 +30,17 @@ urlpatterns = [
     path('doctorclick', views.doctorclick_view),
     path('patientclick', views.patientclick_view),
 
-    path('adminsignup', views.admin_signup_view),
-    path('doctorsignup', views.doctor_signup_view,name='doctorsignup'),
-    path('patientsignup', views.patient_signup_view),
+    path('adminlogin', views.admin_signup_view),
+    path('doctorlogin', views.doctor_signup_view,name='doctorsignup'),
+    path('patientlogin', views.patient_signup_view),
     
-    path('adminlogin', LoginView.as_view(template_name='hospital/adminlogin.html')),
-    path('doctorlogin', LoginView.as_view(template_name='hospital/doctorlogin.html')),
-    path('patientlogin', LoginView.as_view(template_name='hospital/patientlogin.html')),
+    path('adminlogin', LoginView.as_view(template_name='admin_login.html')),
+    path('doctorlogin', LoginView.as_view(template_name='doctor_login.html')),
+    path('patientlogin', LoginView.as_view(template_name='patient_login.html')),
 
 
     path('afterlogin', views.afterlogin_view,name='afterlogin'),
-    path('logout/', LogoutView.as_view(template_name='hospital/index.html'),name='logout'),
+    path('logout/', LogoutView.as_view(template_name='index.html'),name='logout'),
 
 
     path('admin-dashboard', views.admin_dashboard_view,name='admin-dashboard'),
