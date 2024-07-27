@@ -13,11 +13,30 @@
     a:link {
       text-decoration: none;
     }
-
-    .menu {
-      top: 50px;
+    .navbar-brand{
+      
+      margin-top: 21px;
+      margin-left: 15px;
+    
+    }
+    .navbar-nav{
+      margin-top: 21px;
     }
 
+    .menu {
+      background: #5bc995;
+      border-radius: 29px;
+      height: 70vh;
+      width: 240px;
+      position: fixed;
+      
+      top: 145px;
+      margin-left: 10px;
+      left: 0;
+      z-index: 5;
+      outline: none;
+    }
+   
     h6 {
       color: white;
     }
@@ -44,7 +63,9 @@
 
 
     .card {
-      border-radius: 5px;
+      height: 300px;
+      width: 400px;
+      border-radius: 29px;
       -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
       box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
       border: none;
@@ -68,6 +89,24 @@
     .f-right {
       float: right;
     }
+    .row{
+      position: absolute;
+      top: 140px;
+      left: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+  
+    .bs-example{
+      width: 98%;
+      height: 80px;
+background-color: #E1E1E1;
+border-radius: 20px;
+margin: 15px;
+position: fixed;
+left: 0px;
+    }
   </style>
 </head>
 
@@ -78,7 +117,7 @@
       <div class="card bg-c-blue order-card">
         <div class="card-block">
           <a href="/admin-view-appointment">
-            <h6 class="m-b-20">View Appointment</h6>
+            <h6 class="m-b-20" style="font-size: 30px;">View Appointment</h6>
           </a>
           <br>
           <h2 class="text-right"><i class="fas fa-calendar f-left"></i></h2>
@@ -91,7 +130,7 @@
       <div class="card bg-c-green order-card">
         <div class="card-block">
           <a href="/admin-add-appointment">
-            <h6 class="m-b-20">Book Appointment</h6>
+            <h6 class="m-b-20" style="font-size: 30px;">Book Appointment</h6>
           </a>
           <br>
           <h2 class="text-right"><i class="fas fa-book-medical f-left"></i></h2>
@@ -103,7 +142,7 @@
       <div class="card bg-c-yellow order-card">
         <div class="card-block">
           <a href="/admin-approve-appointment">
-            <h6 class="m-b-20">Approve Appointment</h6>
+            <h6 class="m-b-20" style="font-size: 30px;">Approve Appointment</h6>
           </a>
           <br>
           <h2 class="text-right"><i class="fas fa-check-circle f-left"></i></h2>
