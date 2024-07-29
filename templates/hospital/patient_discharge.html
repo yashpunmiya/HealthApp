@@ -4,9 +4,13 @@
 
 <head>
   <meta charset="utf-8">
-  <title>A simple, clean, and responsive HTML invoice template</title>
+  <title>MedSafe</title>
 
   <style>
+    .menu{
+      margin-top:65px;
+    }
+    
     .invoice-box {
       max-width: 800px;
       margin: auto;
@@ -106,6 +110,25 @@
     .download {
       text-align: center;
       display: block;
+      
+    }
+    .navbar-brand{
+      
+      margin-top: 21px;
+      margin-left: 15px;
+    
+    }
+    .navbar-nav{
+      margin-top: 21px;
+    }
+    .bs-example{
+      width: 98%;
+      height: 80px;
+background-color: #E1E1E1;
+border-radius: 20px;
+margin: 15px;
+position: fixed;
+left: 0px;
     }
   </style>
 </head>
@@ -231,7 +254,7 @@
 </div>
 <br><br>
 <div class="download">
-  <a style="background:red; width:500px;" href="{% url 'download-pdf' patientId  %}">Download</a>
+  <a style="background:red;" href="{% url 'download-pdf' patientId  %}">Download</a>
 </div>
 
 
@@ -241,10 +264,6 @@
 <h5 style="text-align:center;">Your Treatment Is Going On !</h5><br><br>
 <h6 style="text-align:center;">When You Will Be Discahrged. You Can Download Invoice.</h6>
 {%endif%}
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
+
 <br><br><br><br><br><br><br><br>
 {% endblock content %}
